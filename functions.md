@@ -26,7 +26,6 @@
 - [x] spawnChicken(par1double, par2double, par3double, par4String);
 - [x] spawnCow(par1double, par2double, par3double, par4String);
 - [x] spawnPigZombie(par1double, par2double, par3double, par4int, par5String);
-
 - [ ] ModPE.getBytesFromTexturePack(par1String);
 - [x] ModPE.getMinecraftVersion();
 - [ ] ModPE.langEdit(par1String, par2String);
@@ -50,7 +49,6 @@
 - [ ] ModPE.setTerrain(par1String);
 - [ ] ModPE.showTipMessage(par1String);
 - [x] ModPE.takeScreenshot(par1String);
-
 - [ ] Level.addParticle(par1int, par2double, par3double, par4double, par5double, par6double, par7double, par8int);
 - [ ] Level.biomeIdToName(par1int);
 - [ ] Level.destroyBlock(par1int, par2int, par3int, par4boolean);
@@ -89,7 +87,6 @@
 - [x] Level.spawnChicken(par1double, par2double, par3double, par4String);
 - [x] Level.spawnCow(par1double, par2double, par3double, par4String);
 - [x] Level.spawnMob(par1double, par2double, par3double, par4int, par5String);
-
 - [ ] Player.addItemCreativeInv(par1int, par2int, par3int);
 - [ ] Player.addItemInventory(par1int, par2int, par3int);
 - [ ] Player.canFly();
@@ -118,10 +115,9 @@
 - [ ] Player.isFlying();
 - [ ] Player.isPlayer(par1int);
 - [ ] Player.setArmorSlot(par1int, par2int, par3int);
-- [ ] --Player.setCanFly(par1boolean);--
-- [ ] --Player.setFlying(par1boolean);--
+- [ ] ~~Player.setCanFly(par1boolean);~~
+- [ ] ~~Player.setFlying(par1boolean);~~
 - [x] Player.setHealth(par1int);
-
 - [ ] Entity.getAll();
 - [ ] Entity.getAnimalAge(par1int);
 - [x] Entity.getEntityTypeId(par1int);
@@ -159,7 +155,6 @@
 - [ ] Entity.setVelY(par1int, par2double);
 - [ ] Entity.setVelZ(par1int, par2double);
 - [x] Entity.spawnMob(par1double, par2double, par3double, par4int, par5String);
-
 - [ ] Item.addCraftRecipe(par1int, par2int, par3int, par4Scriptable);
 - [ ] Item.addFurnaceRecipe(par1int, par2int, par3int);
 - [x] Item.addShapedRecipe(par1int, par2int, par3int, par4Scriptable, par5Scriptable);
@@ -167,7 +162,6 @@
 - [ ] Item.setCategory(par1int, par2int, par3int);
 - [ ] Item.setHandEquipped(par1int, par2boolean);
 - [ ] Item.setMaxDamage(par1int, par2int);
-
 - [x] Block.defineBlock(par1int, par2String, par3Object, par4Object, par5Object, par6Object);
 - [ ] Block.getRenderType(par1int);
 - [x] Block.setColor(par1int, par2Scriptable);
@@ -178,11 +172,9 @@
 - [x] Block.setRenderLayer(par1int, par2int);
 - [x] Block.setRenderType(par1int, par2int);
 - [x] Block.setShape(par1int, par2double, par3double, par4double, par5double, par6double, par7double);
-
 - [x] Server.getAddress();
 - [ ] Server.getAllPlayerNames();  #seems to be broken, so haven't added.
 - [ ] Server.getAllPlayers();      #didn't bother because ^
 - [x] Server.getPort();
 - [x] Server.joinServer(par1String, par2int);
 - [x] Server.sendChat(par1String);
-
