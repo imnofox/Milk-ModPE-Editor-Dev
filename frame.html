@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <script src="blockly_compressed.js"></script>
+    <script src="javascript_compressed.js"></script>
+    <script src="blocks_compressed.js"></script>
+    <script src="msg/js/en.js"></script>
+    
+    <script src="blocks/text.js"></script>
+    <script src="generators/javascript/text.js"></script>
+    
+    <script src="blocks/events.js"></script>
+    <script src="generators/javascript/events.js"></script>
+    
+    <script src="blocks/entity.js"></script>
+    <script src="generators/javascript/entity.js"></script>
+    
+    <script src="blocks/loops.js"></script>
+    <script src="generators/javascript/loops.js"></script>
+    
+    <script src="blocks/variables.js"></script>
+    <script src="generators/javascript/variables.js"></script>
+    
+    <script src="blocks/lists.js"></script>
+    <script src="generators/javascript/lists.js"></script>
+    
+    <style>
+      html, body {
+        background-color: #fff;
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        height: 100%;
+      }
+      .blocklySvg {
+        height: 100%;
+        width: 100%;
+      }
+      #textareas{
+	width: 100%;
+	height: 19%;
+      }
+      textarea {
+	float: left;
+      }
+     
+      #code {
+	width: 65%;
+	height: 100%;
+      }
+      #xml {
+	width: 33%;
+	height: 50%;
+      }
+      #unit {
+	height: 80%;
+      }
+    </style>
+    <script>
+      function init() {
+        Blockly.inject(document.getElementById('unit'),
+            {toolbox: document.getElementById('toolbox'),grid:
+         {spacing: 30,
+          length: 5,
+          colour: '#ffab7f',
+          snap: true}
+});
+        // Let the top-level application know that Blockly is ready.
+        window.parent.blocklyLoaded(Blockly);
+        Blockly.addChangeListener(myUpdateFunction);
+      }
+      function myUpdateFunction() {
+      var code = Blockly.JavaScript.workspaceToCode();
+      document.getElementById('code').value = code;
+      var xml = Blockly.Xml.workspaceToDom(Blockly.mainWorkspace);
+      var xml_text = Blockly.Xml.domToPrettyText(xml);
+      document.getElementById('xml').value = xml_text;
+    }
+    
+      function generateProjectLink(){
+	var xml = Blockly.Xml.workspaceToDom(Blockly.mainWorkspace);
+	var xml_text = encodeURI(Blockly.Xml.domToPrettyText(xml));
+	
+	document.getElementById('downloadPackage').href = "data:application/octet-stream," + xml_text;
+      }
+      function generateJavascriptLink(){
+	var code = Blockly.JavaScript.workspaceToCode();
+	var code_text = encodeURI(code);
+	
+	document.getElementById('downloadScript').href = "data:application/octet-stream," + code_text;
+      }
+      
+    </script>
+  </head>
+  <body onload="init()">
+    <xml id="toolbox" style="display: none">
+      <category name="Variables">
+	<block type="variables_get"></block>
+	<block type="variables_set"></block>
+	<category name="Lists">
+	  <block type="lists_create_empty"></block>
+	  <block type="lists_create_with"></block>
+	  <block type="lists_length"></block>
+	  <block type="lists_isEmpty"></block>
+	  <block type="lists_indexOf"></block>
+	  <block type="lists_getIndex"></block>
+	  <block type="lists_setIndex"></block>
+	  <category name="Advanced">
+	    <block type="lists_split"></block>
+	    <block type="lists_getSublist"></block>
+	    <block type="lists_repeat"></block>
+	  </category>
+	</category>
+      </category>
+      <category name="Logic">
+	<block type="controls_if"></block>
+	<block type="logic_operation"></block>
+	<block type="logic_negate"></block>
+	<block type="logic_compare"></block>
+	<block type="logic_boolean"></block>
+	<block type="logic_null"></block>
+	<block type="logic_ternary"></block>
+      </category>
+      <category name="Loops">
+	<block type="mod_tick"></block>
+	<block type="controls_repeat_ext">
+	  <value name="TIMES">
+	    <block type="math_number">
+	      <field name="NUM">0</field>
+	    </block>
+	  </value>
+	</block>
+	<block type="controls_whileUntil"></block>
+	<block type="controls_for"></block>
+	<block type="controls_forEach"></block>
+	
+	<category name="Advanced">
+	  <block type="controls_flow_statements"></block>
+	</category>
+      </category>
+      <category name="Events">
+	<category name="Use item">
+	  <block type="use_item"></block>
+	  <block type="item_id"></block>
+	  <block type="block_id"></block>
+	  <block type="block_side"></block>
+	  <block type="select_side"></block>
+	  <block type="item_damage"></block>
+	  <block type="block_damage"></block>
+	</category>
+	<category name="Attack">
+	  <block type="attack_hook"></block>
+	  <block type="attack_attacker"></block>
+	  <block type="attack_victim"></block>
+	</category>
+	<category name="Command">
+	  <block type="command_event"></block>
+	  <block type="command_cmd"></block>
+	  <block type="command_args"></blocks>
+	</category>
+	<category name="Join/Leave">
+	  <block type="new_level_event"></block>
+	  <block type="leave_game_event"></block>
+	</category>
+	<category name="Entity Spawned/Removed">
+	  <block type="entity_spawned_event"></block>
+	  <block type="entity_removed_event"></block>
+	  <block type="entity_rem_add_variable"></block>
+	</category>
+	<category name="Death">
+	  <block type="death_event"></block>
+	  <block type="murderer_variable"></block>
+	  <block type="victim_variable"></block>
+	</category>
+      </category>
+      <category name="Text">
+	<block type="credits"></block>
+	<block type="text"></block>
+	<block type="text_join"></block>
+	<block type="text_print"></block>
+	<block type="client_message"></block>
+	<block type="text_isEmpty"></block>
+	<block type="text_length"></block>
+	<category name="Advanced">
+	    <block type="text_trim"></block>
+	    <block type="text_append"></block>
+	    <block type="text_changeCase"></block>
+	    <block type="text_charAt"></block>
+	    <block type="text_getSubstring"></block>
+	    <block type="text_indexOf"></block>
+	  </category>
+      </category>
+      <category name="Maths">
+	<block type="math_number"></block>
+	<block type="math_arithmetic"></block>
+	<block type="math_number_property"></block>
+	<block type="math_random_int"></block>
+	<block type="math_change"></block>
+	<category name="Advanced">
+	  <block type="math_single"></block>
+	  <block type="math_random_float"></block>
+	  <block type="math_trig"></block>
+	  <block type="math_constant"></block>
+	  <block type="math_round"></block>
+	  <block type="math_on_list"></block>
+	  <block type="math_constrain"></block>
+	  <block type="math_modulo"></block>
+	</category>
+      </category>
+      <sep></sep>
+      <category name="Level">
+      
+      </category>
+      <category name="Entity">
+	<block type="override_texture"></block>
+	<block type="spawn_cow">
+	  <value name="x_coord">
+	    <block type="math_number">
+	      <field name="NUM">0</field>
+	    </block>
+	  </value>
+	  <value name="y_coord">
+	    <block type="math_number">
+	      <field name="NUM">64</field>
+	    </block>
+	  </value>
+	  <value name="z_coord">
+	    <block type="math_number">
+	      <field name="NUM">0</field>
+	    </block>
+	  </value>
+	</block>
+	<block type="spawn_chicken">
+	  <value name="x_coord">
+	    <block type="math_number">
+	      <field name="NUM">0</field>
+	    </block>
+	  </value>
+	  <value name="y_coord">
+	    <block type="math_number">
+	      <field name="NUM">64</field>
+	    </block>
+	  </value>
+	  <value name="z_coord">
+	    <block type="math_number">
+	      <field name="NUM">0</field>
+	    </block>
+	  </value>
+	</block>
+	<block type="get_yaw">
+	  <value name="yaw">
+	    <block type="player_ent">
+	    </block>
+	  </value>
+	</block>
+	<block type="get_pitch">
+	  <value name="pitch">
+	    <block type="player_ent">
+	    </block>
+	  </value>
+	</block>
+      </category>
+      <category name="Player">
+	<block type="player_ent"></block>
+	<block type="player_x"></block>
+	<block type="player_y"></block>
+	<block type="player_z"></block>
+	<block type="carried_item"></block>
+	<block type="set_player_health">
+	  <value name="health">
+	    <block type="math_number">
+	      <field name="NUM">20</field>
+	    </block>
+	  </value>
+	</block>
+      </category>
+      <sep></sep>
+      <category name="Advanced">
+      </category>
+    </xml>
+    <div id="unit"></div>
+    <div id="textareas">
+      <textarea id="code"></textarea>
+      <textarea wrap="off" id="xml"></textarea>
+      <a href="#" onclick="generateProjectLink()" id="downloadPackage" download="my_package.bucket.milk">Download Project</a>
+      </br>
+      <a href="#" onclick="generateJavascriptLink()" id="downloadScript" download="my_modpe_script.bucket.js">Download ModPE Script</a>
+    </div>
+  </body>
+</html>

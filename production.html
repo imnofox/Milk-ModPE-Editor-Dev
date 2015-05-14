@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>Bucket O' Milk - ModPE Editor</title>
+    <style>
+        html,
+        body {
+            height: 100%;
+        }
+        body {
+            background-color: #fff;
+            font-family: sans-serif;
+            margin-top: 0;
+            margin-bottom: 0;
+        }
+        h1 {
+            font-weight: normal;
+            font-size: 140%;
+        }
+        img {
+            float: left;
+            height: 50px;
+        }
+        iframe {
+            width: 100%;
+            height: 100%;
+            border-style: solid;
+            border-color: #ddd;
+            border-width: 0 1px 1px 0;
+        }
+        a.button {
+            -webkit-border-radius: 5;
+            -moz-border-radius: 5;
+            border-radius: 5px;
+            color: #ffffff;
+            background: #3498db;
+            padding: 10px 20px 10px 20px;
+            text-decoration: none;
+        }
+        a.button:hover {
+            background: #3cb0fd;
+            text-decoration: none;
+        }
+        td.right {
+            text-align: right;
+        }
+        div.right {
+            float: right;
+            width: 33%;
+            margin-left: 8px;
+        }
+        div.centre {
+            float: left;
+            width: 30%;
+            padding-left: 10px;
+        }
+        div.left {
+            float: left;
+            width: 35%;
+            height: 100%;
+        }
+        #download_buttons {
+            float: right;
+        }
+        .blocklySvg {
+            height: 100%;
+            width: 100%;
+        }
+        #textareas {
+            width: 100%;
+            height: 19%;
+            min-height: 90px;
+        }
+        #code {
+            width: 100%;
+            height: 100%;
+        }
+        #xml {
+            width: 100%;
+            height: 30%;
+            float: left;
+        }
+        #project_input {
+            width: 100%;
+            height: 30%;
+            float: left;
+        }
+        #unit {
+            height: 75%;
+        }
+        .right tr {
+            height: 40px;
+        }
+    </style>
+    <script src="blockly_compressed.js"></script>
+    <script src="javascript_compressed.js"></script>
+    <script src="blocks_compressed.js"></script>
+    <script src="msg/js/en.js"></script>
+
+  
+
+    <script>
+        function init() {
+            Blockly.inject(document.getElementById('unit'), {
+                toolbox: document.getElementById('toolbox'),
+                grid: {
+                    spacing: 30,
+                    length: 5,
+                    colour: '#ffab7f',
+                    snap: true
+                },
+                media: 'media/'
+            });
+            Blockly.addChangeListener(onUpdate);
+            debug_it();
+        }
+
+        function onUpdate() {
+            var code = Blockly.JavaScript.workspaceToCode();
+            document.getElementById('code').value = code;
+            var xml = Blockly.Xml.workspaceToDom(Blockly.mainWorkspace);
+            var xml_text = Blockly.Xml.domToPrettyText(xml);
+            document.getElementById('xml').value = xml_text;
+        }
+
+        function generateProjectLink() {
+            var xml = Blockly.Xml.workspaceToDom(Blockly.mainWorkspace);
+            var xml_text = encodeURI(Blockly.Xml.domToPrettyText(xml));
+            document.getElementById('downloadPackage').href = "data:application/octet-stream," + xml_text;
+        }
+
+        function generateJavascriptLink() {
+            var code = Blockly.JavaScript.workspaceToCode();
+            var code_text = encodeURI(code);
+            document.getElementById('downloadScript').href = "data:application/octet-stream," + code_text;
+        }
+
+        function debug_it() {
+            if (!document.getElementById("debug_check").checked) {
+                document.getElementById("code").style.display = 'none';
+                document.getElementById("downloadPackage").style.display = 'none';
+                document.getElementById("loadProject").style.display = 'none';
+                document.getElementById("xml_boxes").style.visibility = 'hidden';
+            } else {
+                document.getElementById("code").style.display = 'block';
+                document.getElementById("downloadPackage").style.display = 'inline';
+                document.getElementById("loadProject").style.display = 'inline';
+                document.getElementById("xml_boxes").style.visibility = 'visible';
+            }
+        }
+
+        function loadProject() {
+            if (Blockly.JavaScript.workspaceToCode() != "") {
+                override = window.confirm("You've already got a prgram loaded. Are you sure you want to replace it?");
+                if (override == true) {
+
+                    Blockly.getMainWorkspace().clear();
+                    xml = Blockly.Xml.textToDom(document.getElementById('project_input').value);
+                    Blockly.Xml.domToWorkspace(Blockly.getMainWorkspace(), xml);
+                    document.getElementById('project_input').value = null;
+                }
+
+
+            } else {
+
+                Blockly.getMainWorkspace().clear();
+                xml = Blockly.Xml.textToDom(document.getElementById('project_input').value);
+                Blockly.Xml.domToWorkspace(Blockly.getMainWorkspace(), xml);
+            }
+        }
+    </script>
+
+    <link href="genericons.css" type="text/css" rel="stylesheet" />
+</head>
+
+<body onload="init()">
+    <table width="100%" height="99%">
+        <tr>
+            <td>
+                <img src="milk.png" />
+                <h1><a nohref>Bucket O' Milk | ModPE Editor</a></h1>
+            </td>
+            <td class="right">
+                <input id="debug_check" onchange="debug_it()" checked type="checkbox" />Debug mode
+                <a href="#" class="button">Login/Register</a>
+                <a href="#" class="button">MCPE Stuffs</a>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2" height="99%">
+                <xml id="toolbox" style="display: none">
+                    <category name="Variables">
+                        <block type="variables_get"></block>
+                        <block type="variables_set"></block>
+                        <category name="Lists">
+                            <block type="lists_create_empty"></block>
+                            <block type="lists_create_with"></block>
+                            <block type="lists_length"></block>
+                            <block type="lists_isEmpty"></block>
+                            <block type="lists_indexOf"></block>
+                            <block type="lists_getIndex"></block>
+                            <block type="lists_setIndex"></block>
+                            <category name="Advanced">
+                                <block type="lists_split"></block>
+                                <block type="lists_getSublist"></block>
+                                <block type="lists_repeat"></block>
+                            </category>
+                        </category>
+                    </category>
+                    <category name="Logic">
+                        <block type="controls_if"></block>
+                        <block type="logic_compare"></block>
+                        <block type="logic_operation"></block>
+                        <block type="logic_negate"></block>
+                        <block type="logic_boolean"></block>
+                        <block type="logic_null"></block>
+                        <block type="logic_ternary"></block>
+                    </category>
+                    <category name="Loops">
+                        <block type="mod_tick"></block>
+                        <block type="controls_repeat_ext">
+                            <value name="TIMES">
+                                <block type="math_number">
+                                    <field name="NUM">0</field>
+                                </block>
+                            </value>
+                        </block>
+                        <block type="controls_whileUntil"></block>
+                        <block type="controls_for"></block>
+                        <block type="controls_forEach"></block>
+
+                        <category name="Advanced">
+                            <block type="controls_flow_statements"></block>
+                        </category>
+                    </category>
+                    <category name="ModPE">
+                        <block type="prevent_default"></block>
+                        <block type="add_furnace_recipe"></block>
+                        <block type="set_game_ticks"></block>
+                        <block type="join_server">
+                            <value name="address">
+                                <block type="text">
+                                    <field name="TEXT">sg21.lbsg.net</field>
+                                </block>
+                            </value>
+                        </block>
+                        <block type="take_screenshot"></block>
+                        <block type="set_texture"></block>
+                    </category>
+                    <category name="Events">
+                        <category name="Use item">
+                            <block type="use_item"></block>
+                            <block type="item_vars"></block>
+                            <block type="select_side"></block>
+                        </category>
+                        <category name="Destroy block">
+                            <block type="break_block_event"></block>
+                            <block type="break_block_item_vars"></block>
+                            <block type="select_side"></block>
+                        </category>
+                        <category name="Attack">
+                            <block type="attack_hook"></block>
+                            <block type="attack_attacker"></block>
+                            <block type="attack_victim"></block>
+                        </category>
+                        <category name="Command">
+                            <block type="command_event"></block>
+                            <block type="command_cmd"></block>
+                            <block type="command_args">
+                                </blocks>
+                        </category>
+                        <category name="Join/Leave">
+                            <block type="new_level_event"></block>
+                            <block type="leave_game_event"></block>
+                        </category>
+                        <category name="Entity Spawned/Removed">
+                            <block type="entity_spawned_event"></block>
+                            <block type="entity_removed_event"></block>
+                            <block type="entity_rem_add_variable"></block>
+                        </category>
+                        <category name="Death">
+                            <block type="death_event"></block>
+                            <block type="murderer_variable"></block>
+                            <block type="victim_variable"></block>
+                        </category>
+                    </category>
+                    <category name="Text">
+                        <block type="credits"></block>
+                        <block type="text"></block>
+                        <block type="text_colour"></block>
+                        <block type="text_join"></block>
+                        <block type="text_print"></block>
+                        <block type="client_message"></block>
+                        <block type="text_isEmpty"></block>
+                        <block type="text_length"></block>
+                        <category name="Advanced">
+                            <block type="text_trim"></block>
+                            <block type="text_append"></block>
+                            <block type="text_changeCase"></block>
+                            <block type="text_charAt"></block>
+                            <block type="text_getSubstring"></block>
+                            <block type="text_indexOf"></block>
+                        </category>
+                    </category>
+                    <category name="Maths">
+                        <block type="math_number"></block>
+                        <block type="math_arithmetic"></block>
+                        <block type="math_number_property"></block>
+                        <block type="math_random_int"></block>
+                        <block type="math_change"></block>
+                        <category name="Advanced">
+                            <block type="math_single"></block>
+                            <block type="math_random_float"></block>
+                            <block type="math_trig"></block>
+                            <block type="math_constant"></block>
+                            <block type="math_round"></block>
+                            <block type="math_on_list"></block>
+                            <block type="math_constrain"></block>
+                            <block type="math_modulo"></block>
+                        </category>
+                    </category>
+                    <sep></sep>
+                    <category name="Level">
+                        <block type="level_spawnmob">
+                            <value name="entity">
+                                <block type="entity_ids"></block>
+                            </value>
+                            <value name="x_coord">
+                                <block type="math_number">
+                                    <field name="NUM">0</field>
+                                </block>
+                            </value>
+                            <value name="y_coord">
+                                <block type="math_number">
+                                    <field name="NUM">64</field>
+                                </block>
+                            </value>
+                            <value name="z_coord">
+                                <block type="math_number">
+                                    <field name="NUM">0</field>
+                                </block>
+                            </value>
+                        </block>
+                        <block type="level_explode">
+                            <value name="x">
+                                <block type="math_number">
+                                    <field name="NUM">0</field>
+                                </block>
+                            </value>
+                            <value name="y">
+                                <block type="math_number">
+                                    <field name="NUM">64</field>
+                                </block>
+                            </value>
+                            <value name="z">
+                                <block type="math_number">
+                                    <field name="NUM">0</field>
+                                </block>
+                            </value>
+                            <value name="radius">
+                                <block type="math_number">
+                                    <field name="NUM">5</field>
+                                </block>
+                            </value>
+                        </block>
+                        <block type="get_tile">
+                            <value name="x">
+                                <block type="math_number">
+                                    <field name="NUM">0</field>
+                                </block>
+                            </value>
+                            <value name="y">
+                                <block type="math_number">
+                                    <field name="NUM">0</field>
+                                </block>
+                            </value>
+                            <value name="z">
+                                <block type="math_number">
+                                    <field name="NUM">0</field>
+                                </block>
+                            </value>
+                        </block>
+                        <block type="set_tile">
+                            <value name="x">
+                                <block type="math_number">
+                                    <field name="NUM">0</field>
+                                </block>
+                            </value>
+                            <value name="y">
+                                <block type="math_number">
+                                    <field name="NUM">0</field>
+                                </block>
+                            </value>
+                            <value name="z">
+                                <block type="math_number">
+                                    <field name="NUM">0</field>
+                                </block>
+                            </value>
+                            <value name="id">
+                                <block type="math_number">
+                                    <field name="NUM">1</field>
+                                </block>
+                            </value>
+                        </block>
+                        <block type="get_world_name"></block>
+                        <block type="destroy_tile">
+                            <value name="x">
+                                <block type="math_number">
+                                    <field name="NUM">0</field>
+                                </block>
+                            </value>
+                            <value name="y">
+                                <block type="math_number">
+                                    <field name="NUM">0</field>
+                                </block>
+                            </value>
+                            <value name="z">
+                                <block type="math_number">
+                                    <field name="NUM">0</field>
+                                </block>
+                            </value>
+                            <value name="drop">
+                                <block type="logic_boolean">
+                                    <field name="BOOL">TRUE</field>
+                                </block>
+                            </value>
+                        </block>
+                    </category>
+                    <category name="Entity">
+                        <block type="override_texture"></block>
+                        <block type="entity_setmobskin">
+                        </block>
+                        <block type="entity_ids"></block>
+                        <block type="get_yaw">
+                            <value name="yaw">
+                                <block type="player_ent">
+                                </block>
+                            </value>
+                        </block>
+                        <block type="get_pitch">
+                            <value name="pitch">
+                                <block type="player_ent">
+                                </block>
+                            </value>
+                        </block>
+                        <block type="entity_set_name_tag">
+                            <value name="name">
+                                <block type="text">
+                                    <field name="TEXT">Justin</field>
+                                </block>
+                            </value>
+                        </block>
+                        <block type="entity_get_age"></block>
+                        <block type="entity_set_age">
+                            <value name="age">
+                                <block type="math_number">
+                                    <field name="NUM">0</field>
+                                </block>
+                            </value>
+                        </block>
+                        <block type="entity_get_id"></block>
+                        <block type="entity_remove"></block>
+                    </category>
+                    <category name="Player">
+                        <block type="player_ent"></block>
+                        <block type="player_x"></block>
+                        <block type="player_y"></block>
+                        <block type="player_z"></block>
+                        <block type="carried_item"></block>
+                        <block type="add_item_inv">
+                            <value name="amount">
+                                <block type="math_number">
+                                    <field name="NUM">1</field>
+                                </block>
+                            </value>
+                            <value name="item">
+                                <block type="math_number">
+                                    <field name="NUM">280</field>
+                                </block>
+                            </value>
+                            <value name="data">
+                                <block type="math_number">
+                                    <field name="NUM">0</field>
+                                </block>
+                            </value>
+                        </block>
+                        <block type="set_player_health">
+                            <value name="health">
+                                <block type="math_number">
+                                    <field name="NUM">20</field>
+                                </block>
+                            </value>
+                        </block>
+                        <block type="entity_ride"></block>
+                    </category>
+                    <sep></sep>
+                    <category name="Advanced">
+                    </category>
+                    <category custom="PROCEDURE" name="Functions"></category>
+                </xml>
+                <div id="unit"></div>
+                <div id="textareas">
+                    <div class="left">
+                        <textarea wrap="off" readonly id="code"></textarea>
+                    </div>
+                    <div class="centre" id="xml_boxes">
+                        <table>
+                            <tr>
+                                <td>Project XML</td>
+                                <td>XML Input</td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <textarea readonly wrap="off" id="xml"></textarea>
+                                </td>
+                                <td>
+                                    <textarea placeholder="Enter XML" wrap="off" id="project_input"></textarea>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <a href="#" onclick="generateProjectLink()" id="downloadPackage" download="project.xml">↓ XML</a>
+                                </td>
+                                <td><a href="#" onclick="loadProject()" id="loadProject">↑ XML</a>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="right">
+                        <div id="download_buttons">
+                            <table>
+                                <tr>
+                                    <td><a href="#" class="button"><span class="genericon genericon-attachment"></span> Save Project</a>
+                                    </td>
+                                    <td>
+                                        <a href="#" class="button"><span class="genericon genericon-cloud-upload"></span> Load Project</a>
+                                    </td>
+                                </tr>
+                                <tr>
+
+                                    <td colspan="2"><a style="width: 281px; display: inline-block;" href="#" class="button" onclick="generateJavascriptLink()" id="downloadScript" download="my_modpe_script.bucket.js"><span class="genericon genericon-download"></span> Download ModPE Script (.js file)</a>
+                                    </td>
+                                </tr>
+                            </table>
+
+
+
+
+
+                        </div>
+                    </div>
+                </div>
+            </td>
+        </tr>
+    </table>
+
+</body>
+
+</html>

@@ -1,0 +1,775 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>Bucket O' Milk - ModPE Editor</title>
+    <link href="blocks.css" rel="stylesheet" />
+    <style>
+        html,
+        body {
+            height: 100%;
+        }
+        body {
+            background-color: #fff;
+            font-family: sans-serif;
+            margin-top: 0;
+            margin-bottom: 0;
+        }
+        h1 {
+            font-weight: normal;
+            font-size: 140%;
+        }
+        img {
+            float: left;
+            height: 50px;
+        }
+        iframe {
+            width: 100%;
+            height: 100%;
+            border-style: solid;
+            border-color: #ddd;
+            border-width: 0 1px 1px 0;
+        }
+        a.button {
+            -webkit-border-radius: 5;
+            -moz-border-radius: 5;
+            border-radius: 5px;
+            color: #ffffff;
+            background: #3498db;
+            padding: 10px 20px 10px 20px;
+            text-decoration: none;
+        }
+        a.button:hover {
+            background: #3cb0fd;
+            text-decoration: none;
+        }
+        td.right {
+            text-align: right;
+        }
+        div.right {
+            float: right;
+            width: 33%;
+            margin-left: 8px;
+        }
+        div.centre {
+            float: left;
+            width: 30%;
+            padding-left: 10px;
+        }
+        div.left {
+            float: left;
+            width: 35%;
+            height: 100%;
+        }
+        #download_buttons {
+            float: right;
+        }
+        .blocklySvg {
+            height: 100%;
+            width: 100%;
+        }
+        #textareas {
+            width: 100%;
+            height: 19%;
+            min-height: 90px;
+        }
+        #code {
+            width: 100%;
+            height: 100%;
+        }
+        #xml {
+            width: 100%;
+            height: 30%;
+            float: left;
+        }
+        #project_input {
+            width: 100%;
+            height: 30%;
+            float: left;
+        }
+        #unit {
+            height: 75%;
+        }
+        .right tr {
+            height: 40px;
+        }
+        #crafting-grid td {
+            width: 32px;
+            height: 32px;
+            padding: 0;
+            color: white;
+            text-align: right;
+            vertical-align: bottom;
+            text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000, 1px 1px 4px rgba(0, 0, 0, 1);
+            overflow: hidden;
+        }
+        #crafting-grid td[class*='items-'] {
+            background-color: orangered;
+        }
+        #crafting-grid td#grid-text {
+            text-align: left;
+            text-shadow: 1px 1px 4px rgba(0, 0, 0, 1);
+            color: #000;
+            overflow: hidden;
+        }
+        #crafting-grid td#grid-text:hover {
+            text-align: right;
+        }
+        #crafting-grid table {
+            table-layout: fixed;
+        }
+        #crafting-grid-box {
+            position: fixed;
+            z-index: 1;
+            top: 25%;
+            right: -115px;
+            background: white;
+            border-radius: 4px 0 0 4px;
+            padding: 5px;
+            -webkit-box-shadow: 1px 1px 4px 0px rgba(0, 0, 0, 1);
+            -moz-box-shadow: 1px 1px 4px 0px rgba(0, 0, 0, 1);
+            box-shadow: 1px 1px 4px 0px rgba(0, 0, 0, 1);
+            opacity: .7;
+            transition: .2s;
+        }
+        #crafting-grid-box:hover {
+            opacity: 1;
+        }
+    </style>
+
+    <script src="blockly_uncompressed.js"></script>
+
+    <script src="blocks/logic.js"></script>
+    <script src="blocks/loops.js"></script>
+    <script src="blocks/math.js"></script>
+    <script src="blocks/text.js"></script>
+    <script src="blocks/lists.js"></script>
+    <script src="blocks/colour.js"></script>
+    <script src="blocks/variables.js"></script>
+    <script src="blocks/procedures.js"></script>
+
+    <script src="blocks/entity.js"></script>
+    <script src="blocks/events.js"></script>
+    <script src="blocks/level.js"></script>
+    <script src="blocks/modpe.js"></script>
+    <script src="blocks/player.js"></script>
+    <script src="blocks/block.js"></script>
+    <script src="blocks/server.js"></script>
+    <script src="blocks/items.js"></script>
+
+    <script src="generators/javascript.js"></script>
+    <script src="generators/javascript/logic.js"></script>
+    <script src="generators/javascript/loops.js"></script>
+    <script src="generators/javascript/math.js"></script>
+    <script src="generators/javascript/text.js"></script>
+    <script src="generators/javascript/lists.js"></script>
+    <script src="generators/javascript/colour.js"></script>
+    <script src="generators/javascript/variables.js"></script>
+    <script src="generators/javascript/procedures.js"></script>
+
+    <script src="generators/javascript/entity.js"></script>
+    <script src="generators/javascript/events.js"></script>
+    <script src="generators/javascript/level.js"></script>
+    <script src="generators/javascript/modpe.js"></script>
+    <script src="generators/javascript/player.js"></script>
+    <script src="generators/javascript/block.js"></script>
+    <script src="generators/javascript/server.js"></script>
+    <script src="generators/javascript/items.js"></script>
+
+    <script src="msg/messages.js"></script>
+
+    <script>
+        var item_key;
+
+        function init() {
+            Blockly.inject(document.getElementById('unit'), {
+                toolbox: document.getElementById('toolbox'),
+                grid: {
+                    spacing: 30,
+                    length: 5,
+                    colour: '#EDE3BB',
+                    snap: true
+                },
+                media: 'media/'
+            });
+            Blockly.addChangeListener(onUpdate);
+            debug_it();
+
+            var xmlhttp = new XMLHttpRequest();
+            var json_url = "items.json";
+            xmlhttp.onreadystatechange = function () {
+                if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+                    item_key = JSON.parse(xmlhttp.responseText);
+                }
+            }
+            xmlhttp.open("GET", json_url, true);
+            xmlhttp.overrideMimeType("application/json");
+            xmlhttp.send();
+
+        }
+
+        function call_alert(block) {
+            //console.log(block);
+            switch (block.type) {
+            case "item_recipe":
+                // get the items array from the data
+                var items = JSON.parse(block.data);
+
+                // update each item in the grid & -1 due to last item being output
+                for (var i = 0; i < items.length - 1; i++) {
+                    // add the item class
+                    var dv = items[i][1] || 0;
+                    var rdv = "";
+                    if (dv != 0) {
+                        rdv = ":" + dv;
+                    }
+                    document.getElementById("grid-" + i).className = 'items-20-' + items[i][0] + '-' + dv;
+                    // show the id
+                    document.getElementById("grid-" + i).innerHTML = items[i][0].toString() + rdv;
+                }
+
+                // do the same to the output
+                var dv = items[9][1] || 0;
+                var rdv = "";
+                if (dv != 0) {
+                    rdv = ":" + dv;
+                }
+                // add the item class
+                document.getElementById("grid-output").className = 'items-20-' + items[9][0] + '-' + dv;
+                // show the id
+                document.getElementById("grid-output").innerHTML = items[9][0] + rdv;
+                // show the count
+                if (items[9][2].toString().length > 2) {
+                    document.getElementById("grid-text").innerHTML = "&nbsp;";
+                } else {
+                    document.getElementById("grid-text").innerHTML = "x" + items[9][2].toString();
+                }
+
+                // show the grid
+                document.getElementById('crafting-grid-box').style.right = '0';
+                // hide the grid on click
+                document.getElementById('crafting-grid-box').onclick = function () {
+                    document.getElementById('crafting-grid-box').style.right = '-115px';
+                };
+                break;
+            }
+        }
+
+        function onUpdate() {
+            var code = Blockly.JavaScript.workspaceToCode();
+            document.getElementById('code').value = code;
+            var xml = Blockly.Xml.workspaceToDom(Blockly.mainWorkspace);
+            var xml_text = Blockly.Xml.domToPrettyText(xml);
+            document.getElementById('xml').value = xml_text;
+        }
+
+        function generateProjectLink() {
+            var xml = Blockly.Xml.workspaceToDom(Blockly.mainWorkspace);
+            var xml_text = encodeURI(Blockly.Xml.domToPrettyText(xml));
+            document.getElementById('downloadPackage').href = "data:application/octet-stream," + xml_text;
+        }
+
+        function generateJavascriptLink() {
+            var code = Blockly.JavaScript.workspaceToCode();
+            var code_text = encodeURI(code);
+            document.getElementById('downloadScript').href = "data:application/octet-stream," + code_text;
+        }
+
+        function debug_it() {
+            if (!document.getElementById("debug_check").checked) {
+                document.getElementById("code").style.display = 'none';
+                document.getElementById("downloadPackage").style.display = 'none';
+                document.getElementById("loadProject").style.display = 'none';
+                document.getElementById("xml_boxes").style.visibility = 'hidden';
+            } else {
+                document.getElementById("code").style.display = 'block';
+                document.getElementById("downloadPackage").style.display = 'inline';
+                document.getElementById("loadProject").style.display = 'inline';
+                document.getElementById("xml_boxes").style.visibility = 'visible';
+            }
+        }
+
+        function loadProject() {
+            if (Blockly.JavaScript.workspaceToCode() != "") {
+                override = window.confirm("You've already got a prgram loaded. Are you sure you want to replace it?");
+                if (override == true) {
+
+                    Blockly.getMainWorkspace().clear();
+                    xml = Blockly.Xml.textToDom(document.getElementById('project_input').value);
+                    Blockly.Xml.domToWorkspace(Blockly.getMainWorkspace(), xml);
+                    document.getElementById('project_input').value = null;
+                }
+
+
+            } else {
+
+                Blockly.getMainWorkspace().clear();
+                xml = Blockly.Xml.textToDom(document.getElementById('project_input').value);
+                Blockly.Xml.domToWorkspace(Blockly.getMainWorkspace(), xml);
+            }
+        }
+    </script>
+
+    <link href="genericons.css" type="text/css" rel="stylesheet" />
+</head>
+
+<body onload="init()">
+    <table width="100%" height="99%">
+        <tr>
+            <td>
+                <img src="milk.png" />
+                <h1><a nohref>Bucket O' Milk | ModPE Editor</a></h1>
+            </td>
+            <td class="right">
+                <input id="debug_check" onchange="debug_it()" checked type="checkbox" />Debug mode
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2" height="99%">
+                <xml id="toolbox" style="display: none">
+                    <category name="Variables">
+                        <block type="variables_get"></block>
+                        <block type="variables_set"></block>
+                        <category name="Lists">
+                            <block type="lists_create_empty"></block>
+                            <block type="lists_create_with"></block>
+                            <block type="lists_length"></block>
+                            <block type="lists_isEmpty"></block>
+                            <block type="lists_indexOf"></block>
+                            <block type="lists_getIndex"></block>
+                            <block type="lists_setIndex"></block>
+                            <category name="Advanced">
+                                <block type="lists_split"></block>
+                                <block type="lists_getSublist"></block>
+                                <block type="lists_repeat"></block>
+                            </category>
+                        </category>
+                    </category>
+                    <category name="Logic">
+                        <block type="controls_if"></block>
+                        <block type="logic_compare"></block>
+                        <block type="logic_operation"></block>
+                        <block type="logic_negate"></block>
+                        <block type="logic_boolean"></block>
+                        <block type="logic_null"></block>
+                        <block type="logic_ternary"></block>
+                    </category>
+                    <category name="Loops">
+                        <block type="mod_tick"></block>
+                        <block type="controls_repeat_ext">
+                            <value name="TIMES">
+                                <block type="math_number">
+                                    <field name="NUM">0</field>
+                                </block>
+                            </value>
+                        </block>
+                        <block type="controls_whileUntil"></block>
+                        <block type="controls_for"></block>
+                        <block type="controls_forEach"></block>
+
+                        <category name="Advanced">
+                            <block type="controls_flow_statements"></block>
+                        </category>
+                    </category>
+                    <category name="ModPE">
+                        <block type="prevent_default"></block>
+                        <block type="add_furnace_recipe"></block>
+                        <block type="set_game_ticks"></block>
+                        <block type="modpe_leave_game"></block>
+                        <block type="take_screenshot"></block>
+                        <block type="set_texture"></block>
+                        <block type="modpe_reset_images"></block>
+                        <block type="modpe_version"></block>
+                        <category name="Advanced">
+                            <block type="modpe_save_data"></block>
+                            <block type="modpe_read_data"></block>
+                            <block type="modpe_rem_data"></block>
+                        </category>
+                    </category>
+                    <category name="Events">
+                        <category name="Use item">
+                            <block type="use_item"></block>
+                            <block type="item_vars"></block>
+                            <block type="select_side"></block>
+                        </category>
+                        <category name="Destroy block">
+                            <block type="break_block_event"></block>
+                            <block type="break_block_item_vars"></block>
+                            <block type="select_side"></block>
+                        </category>
+                        <category name="Attack">
+                            <block type="attack_hook"></block>
+                            <block type="attack_attacker"></block>
+                            <block type="attack_victim"></block>
+                        </category>
+                        <category name="Command">
+                            <block type="command_event"></block>
+                            <block type="command_cmd"></block>
+                            <block type="command_args">
+                                </blocks>
+                        </category>
+                        <category name="Join/Leave">
+                            <block type="new_level_event"></block>
+                            <block type="leave_game_event"></block>
+                        </category>
+                        <category name="Entity Spawned/Removed">
+                            <block type="entity_spawned_event"></block>
+                            <block type="entity_removed_event"></block>
+                            <block type="entity_rem_add_variable"></block>
+                        </category>
+                        <category name="Death">
+                            <block type="death_event"></block>
+                            <block type="murderer_variable"></block>
+                            <block type="victim_variable"></block>
+                        </category>
+                    </category>
+                    <category name="Text">
+                        <block type="credits"></block>
+                        <block type="text"></block>
+                        <block type="text_colour"></block>
+                        <block type="text_join"></block>
+                        <block type="text_print"></block>
+                        <block type="client_message"></block>
+                        <block type="text_isEmpty"></block>
+                        <block type="text_length"></block>
+                        <category name="Advanced">
+                            <block type="text_trim"></block>
+                            <block type="text_append"></block>
+                            <block type="text_changeCase"></block>
+                            <block type="text_charAt"></block>
+                            <block type="text_getSubstring"></block>
+                            <block type="text_indexOf"></block>
+                        </category>
+                    </category>
+                    <category name="Maths">
+                        <block type="math_number"></block>
+                        <block type="math_arithmetic"></block>
+                        <block type="math_number_property"></block>
+                        <block type="math_random_int"></block>
+                        <block type="math_change"></block>
+                        <category name="Advanced">
+                            <block type="math_single"></block>
+                            <block type="math_random_float"></block>
+                            <block type="math_trig"></block>
+                            <block type="math_constant"></block>
+                            <block type="math_round"></block>
+                            <block type="math_on_list"></block>
+                            <block type="math_constrain"></block>
+                            <block type="math_modulo"></block>
+                        </category>
+                    </category>
+                    <sep></sep>
+                    <category name="Level">
+                        <block type="level_spawnmob">
+                            <value name="entity">
+                                <block type="entity_ids"></block>
+                            </value>
+                            <value name="x_coord">
+                                <block type="math_number">
+                                    <field name="NUM">0</field>
+                                </block>
+                            </value>
+                            <value name="y_coord">
+                                <block type="math_number">
+                                    <field name="NUM">64</field>
+                                </block>
+                            </value>
+                            <value name="z_coord">
+                                <block type="math_number">
+                                    <field name="NUM">0</field>
+                                </block>
+                            </value>
+                        </block>
+                        <block type="level_explode">
+                            <value name="x">
+                                <block type="math_number">
+                                    <field name="NUM">0</field>
+                                </block>
+                            </value>
+                            <value name="y">
+                                <block type="math_number">
+                                    <field name="NUM">64</field>
+                                </block>
+                            </value>
+                            <value name="z">
+                                <block type="math_number">
+                                    <field name="NUM">0</field>
+                                </block>
+                            </value>
+                            <value name="radius">
+                                <block type="math_number">
+                                    <field name="NUM">5</field>
+                                </block>
+                            </value>
+                        </block>
+                        <block type="get_tile">
+                            <value name="x">
+                                <block type="math_number">
+                                    <field name="NUM">0</field>
+                                </block>
+                            </value>
+                            <value name="y">
+                                <block type="math_number">
+                                    <field name="NUM">0</field>
+                                </block>
+                            </value>
+                            <value name="z">
+                                <block type="math_number">
+                                    <field name="NUM">0</field>
+                                </block>
+                            </value>
+                        </block>
+                        <block type="set_tile">
+                            <value name="x">
+                                <block type="math_number">
+                                    <field name="NUM">0</field>
+                                </block>
+                            </value>
+                            <value name="y">
+                                <block type="math_number">
+                                    <field name="NUM">0</field>
+                                </block>
+                            </value>
+                            <value name="z">
+                                <block type="math_number">
+                                    <field name="NUM">0</field>
+                                </block>
+                            </value>
+                            <value name="id">
+                                <block type="math_number">
+                                    <field name="NUM">1</field>
+                                </block>
+                            </value>
+                        </block>
+                        <block type="get_world_name"></block>
+                        <block type="destroy_tile">
+                            <value name="x">
+                                <block type="math_number">
+                                    <field name="NUM">0</field>
+                                </block>
+                            </value>
+                            <value name="y">
+                                <block type="math_number">
+                                    <field name="NUM">0</field>
+                                </block>
+                            </value>
+                            <value name="z">
+                                <block type="math_number">
+                                    <field name="NUM">0</field>
+                                </block>
+                            </value>
+                            <value name="drop">
+                                <block type="logic_boolean">
+                                    <field name="BOOL">TRUE</field>
+                                </block>
+                            </value>
+                        </block>
+                    </category>
+                    <category name="Entity">
+
+                        <block type="set_position"></block>
+                        <block type="override_texture"></block>
+                        <block type="entity_setmobskin">
+                        </block>
+                        <block type="entity_ids"></block>
+                        <block type="get_yaw">
+                            <value name="yaw">
+                                <block type="player_ent">
+                                </block>
+                            </value>
+                        </block>
+                        <block type="get_pitch">
+                            <value name="pitch">
+                                <block type="player_ent">
+                                </block>
+                            </value>
+                        </block>
+                        <block type="set_rot">
+                            <value name="ent">
+                                <block type="player_ent">
+                                </block>
+                            </value>
+                        </block>
+                        <block type="entity_set_name_tag">
+                            <value name="name">
+                                <block type="text">
+                                    <field name="TEXT">Justin</field>
+                                </block>
+                            </value>
+                        </block>
+                        <block type="entity_get_age"></block>
+                        <block type="entity_set_age">
+                            <value name="age">
+                                <block type="math_number">
+                                    <field name="NUM">0</field>
+                                </block>
+                            </value>
+                        </block>
+                        <block type="entity_get_id"></block>
+                        <block type="entity_remove"></block>
+                        <block type="set_vel"></block>
+                    </category>
+                    <category name="Player">
+                        <block type="player_ent"></block>
+                        <block type="player_x"></block>
+                        <block type="player_y"></block>
+                        <block type="player_z"></block>
+                        <block type="carried_item"></block>
+                        <block type="get_gamemode"></block>
+                        <block type="add_item_inv">
+                            <value name="amount">
+                                <block type="math_number">
+                                    <field name="NUM">1</field>
+                                </block>
+                            </value>
+                            <value name="item">
+                                <block type="math_number">
+                                    <field name="NUM">280</field>
+                                </block>
+                            </value>
+                            <value name="data">
+                                <block type="math_number">
+                                    <field name="NUM">0</field>
+                                </block>
+                            </value>
+                        </block>
+                        <block type="set_player_health">
+                            <value name="health">
+                                <block type="math_number">
+                                    <field name="NUM">20</field>
+                                </block>
+                            </value>
+                        </block>
+                        <block type="entity_ride"></block>
+                    </category>
+                    <category name="Item">
+                        <block type="item_set"></block>
+                        <block type="item_set_food"></block>
+                        <block type="item_recipe"></block>
+                        <block type="item_recipe_ingedient"></block>
+                    </category>
+                    <category name="Block">
+                        <block type="block_builder"></block>
+                        <block type="block_shape"></block>
+                        <block type="block_colour"></block>
+                        <block type="block_break_time"></block>
+                        <block type="block_explode"></block>
+                        <block type="block_light"></block>
+                        <block type="block_opacity"></block>
+                    </category>
+                    <category name="Server">
+                        <block type="join_server">
+                            <value name="address">
+                                <block type="text">
+                                    <field name="TEXT">sg21.lbsg.net</field>
+                                </block>
+                            </value>
+                            <value name="port">
+                                <block type="math_number">
+                                    <field name="NUM">19132</field>
+                                </block>
+                            </value>
+                        </block>
+                        <block type="server_address"></block>
+                        <block type="server_port"></block>
+                        <block type="server_message"></block>
+                    </category>
+                    <sep></sep>
+                    <category name="Advanced">
+                    </category>
+                    <category custom="PROCEDURE" name="Functions"></category>
+                </xml>
+                <div id="unit"></div>
+                <div id="textareas">
+                    <div class="left">
+                        <textarea wrap="off" readonly id="code"></textarea>
+                    </div>
+                    <div class="centre" id="xml_boxes">
+                        <table>
+                            <tr>
+                                <td>Project XML</td>
+                                <td>XML Input</td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <textarea readonly wrap="off" id="xml"></textarea>
+                                </td>
+                                <td>
+                                    <textarea placeholder="Enter XML" wrap="off" id="project_input"></textarea>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <a href="#" onclick="generateProjectLink()" id="downloadPackage" download="project.xml">↓ XML</a>
+                                </td>
+                                <td><a href="#" onclick="loadProject()" id="loadProject">↑ XML</a>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="right">
+                        <div id="download_buttons">
+                            <table>
+                                <tr>
+                                    <td><a href="#" class="button"><span class="genericon genericon-attachment"></span> Save Project</a>
+                                    </td>
+                                    <td>
+                                        <a href="#" class="button"><span class="genericon genericon-cloud-upload"></span> Load Project</a>
+                                    </td>
+                                </tr>
+                                <tr>
+
+                                    <td colspan="2"><a style="width: 281px; display: inline-block;" href="#" class="button" onclick="generateJavascriptLink()" id="downloadScript" download="my_modpe_script.bucket.js"><span class="genericon genericon-download"></span> Download ModPE Script (.js file)</a>
+                                    </td>
+                                </tr>
+                            </table>
+
+
+
+
+
+                        </div>
+                    </div>
+                </div>
+            </td>
+        </tr>
+    </table>
+    <div id="crafting-grid-box">
+        <div id="crafting-grid">
+            <table>
+                <col width="32px" />
+                <col width="32px" />
+                <col width="32px" />
+                <tr>
+                    <td id="grid-0" class="pe-item-apple">1</td>
+                    <td id="grid-1" class="pe-item-sword_2">2</td>
+                    <td id="grid-2" class="pe-item-stick">3</td>
+                </tr>
+                <tr>
+                    <td id="grid-3" class="pe-item-record_cat">4</td>
+                    <td id="grid-4" class="pe-item-dye_powder_15">5</td>
+                    <td id="grid-5" class="pe-item-dye_powder_3">6</td>
+                </tr>
+                <tr>
+                    <td id="grid-6" class="pe-item-blaze_powder">4</td>
+                    <td id="grid-7" class="pe-item-beef_cooked">5</td>
+                    <td id="grid-8" class="pe-item-beef_cooked">6</td>
+                </tr>
+                <tr>
+                    <td>&nbsp;</td>
+                    <td id="grid-output" class="pe-item-empty_armor_slot_chestplate">1</td>
+                    <td id="grid-text">x2</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    <div id="3d-viewer-box">
+        <div id="3d-viewer">
+
+        </div>
+    </div>
+
+</body>
+
+</html>

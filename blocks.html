@@ -1,0 +1,84 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Minecraft Block Viewer</title>
+    <script src="http://ajax.cdnjs.com/ajax/libs/camanjs/2.2/caman.full.min.js" type="text/javascript"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Head -->
+    <!--  -->
+    <canvas id="block" height="176" width="160"></canvas>
+    <br />
+    <label>tx:</label>
+    <input type="number" id="in_x"></input>
+    <label>ty:</label>
+    <input type="number" id="in_y"></input>
+    <label>rx:</label>
+    <input type="number" id="in_rx"></input>
+    <label>ry:</label>
+    <input type="number" id="in_ry"></input>
+    <label>fx:</label>
+    <input type="number" id="in_fx"></input>
+    <label>fy:</label>
+    <input type="number" id="in_fy"></input>
+    <label>^:</label>
+    <input type="number" id="in_top"></input>
+    <button id="update_button">Update</button>
+    <script type="text/javascript">
+        var scale = 10;
+        var tx = 1;
+        var ty = 0;
+        var rx = 1;
+        var ry = 0;
+        var fx = 1;
+        var fy = 0;
+
+        var tt = 0;
+
+        window.onload = run()
+
+        function run() {
+            var model_skin = new Image();
+            model_skin.src = "http://earthiverse.ath.cx/scripts/block/images/default.png";
+            model_skin.onload = function () {
+
+                var block = document.getElementById('block').getContext('2d');
+                block.clearRect(0, 0, 200, 200);
+
+
+                //top
+                block.setTransform(-1, 0.5, 1, 0.5, 0, tt);
+                block.drawImage(model_skin, 128 * tx, 128 * ty, 128, 128, -4 * scale, 4 * scale, 8 * scale, 8 * scale);
+
+                //side (left-facing)
+                block.setTransform(1, 0.5, 0, 1.2, 0, 0);
+                block.drawImage(model_skin, 128 * rx, 128 * ry, 128, 128, 0 * scale, 4 / 1.2 * scale, 8 * scale, 8 * scale);
+
+                //front (right-facing)
+                //block.setTransform(1, -0.5, 0, 1.2, 0, 0);
+                //block.drawImage(model_skin, 128 * fx, 128 * fy, 128, 128, 8 * scale, 12 / 1.2 * scale, 8 * scale, 8 * scale);
+            };
+        }
+        document.getElementById("update_button").onclick = function () {
+            tx = document.getElementById("in_x").value;
+            ty = document.getElementById("in_y").value;
+            rx = document.getElementById("in_rx").value;
+            ry = document.getElementById("in_ry").value;
+            fx = document.getElementById("in_fx").value;
+            fy = document.getElementById("in_fy").value;
+            tt = document.getElementById("in_top").value;
+            run();
+        }
+    </script>
+</body>
+
+</html>
