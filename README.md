@@ -1,8 +1,7 @@
-# Blockly
+# Milk ModPE Editor
 
-Google's Blockly is a web-based, visual programming editor.  Users can drag
-blocks together to build programs.  All code is free and open source.
+Using Google's Blockly, this editor lets kids create ModPE scripts (mods for Minecraft: Pocket Edition) easily in the editor. Feel free to contribute :)
 
-**The project page is https://developers.google.com/blockly/**
+The backend for the site isn't going up here- the code is super messy :p
 
-![](https://developers.google.com/blockly/sample.png)
+**Check it out at http://milk.mcpestuffs.com/**
