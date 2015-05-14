@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <title>Bucket O' Milk - ModPE Editor</title>
-    <link href="blocks.css" rel="stylesheet" />
+    <link href="media/blocks.css" rel="stylesheet" />
     <style>
         html,
         body {
@@ -180,7 +180,6 @@
     <script src="msg/messages.js"></script>
 
     <script>
-        var item_key;
 
         function init() {
             Blockly.inject(document.getElementById('unit'), {
@@ -193,20 +192,10 @@
                 },
                 media: 'media/'
             });
+            // add change listener to update xml and js
             Blockly.addChangeListener(onUpdate);
+            // update debug checkbox
             debug_it();
-
-            var xmlhttp = new XMLHttpRequest();
-            var json_url = "items.json";
-            xmlhttp.onreadystatechange = function () {
-                if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-                    item_key = JSON.parse(xmlhttp.responseText);
-                }
-            }
-            xmlhttp.open("GET", json_url, true);
-            xmlhttp.overrideMimeType("application/json");
-            xmlhttp.send();
-
         }
 
         function call_alert(block) {
@@ -257,26 +246,31 @@
         }
 
         function onUpdate() {
+            // print js
             var code = Blockly.JavaScript.workspaceToCode();
             document.getElementById('code').value = code;
+            //print xml
             var xml = Blockly.Xml.workspaceToDom(Blockly.mainWorkspace);
             var xml_text = Blockly.Xml.domToPrettyText(xml);
             document.getElementById('xml').value = xml_text;
         }
 
         function generateProjectLink() {
+            // create downloadable xml
             var xml = Blockly.Xml.workspaceToDom(Blockly.mainWorkspace);
             var xml_text = encodeURI(Blockly.Xml.domToPrettyText(xml));
             document.getElementById('downloadPackage').href = "data:application/octet-stream," + xml_text;
         }
 
         function generateJavascriptLink() {
+            // create downlaodable js
             var code = Blockly.JavaScript.workspaceToCode();
             var code_text = encodeURI(code);
             document.getElementById('downloadScript').href = "data:application/octet-stream," + code_text;
         }
 
         function debug_it() {
+            // update debug js
             if (!document.getElementById("debug_check").checked) {
                 document.getElementById("code").style.display = 'none';
                 document.getElementById("downloadPackage").style.display = 'none';
@@ -289,26 +283,7 @@
                 document.getElementById("xml_boxes").style.visibility = 'visible';
             }
         }
-
-        function loadProject() {
-            if (Blockly.JavaScript.workspaceToCode() != "") {
-                override = window.confirm("You've already got a prgram loaded. Are you sure you want to replace it?");
-                if (override == true) {
-
-                    Blockly.getMainWorkspace().clear();
-                    xml = Blockly.Xml.textToDom(document.getElementById('project_input').value);
-                    Blockly.Xml.domToWorkspace(Blockly.getMainWorkspace(), xml);
-                    document.getElementById('project_input').value = null;
-                }
-
-
-            } else {
-
-                Blockly.getMainWorkspace().clear();
-                xml = Blockly.Xml.textToDom(document.getElementById('project_input').value);
-                Blockly.Xml.domToWorkspace(Blockly.getMainWorkspace(), xml);
-            }
-        }
+        
     </script>
 
     <link href="genericons.css" type="text/css" rel="stylesheet" />
@@ -318,7 +293,7 @@
     <table width="100%" height="99%">
         <tr>
             <td>
-                <img src="milk.png" />
+                <img src="media/milk.png" />
                 <h1><a nohref>Bucket O' Milk | ModPE Editor</a></h1>
             </td>
             <td class="right">
@@ -715,7 +690,8 @@
                                     <td><a href="#" class="button"><span class="genericon genericon-attachment"></span> Save Project</a>
                                     </td>
                                     <td>
-                                        <a href="#" class="button"><span class="genericon genericon-cloud-upload"></span> Load Project</a>
+                                        <!-- this does nothing -->
+                                        <a href="#" class="button disabled"><span class="genericon genericon-cloud-upload"></span> Load Project</a>
                                     </td>
                                 </tr>
                                 <tr>
