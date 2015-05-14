@@ -143,3 +143,35 @@ Blockly.JavaScript['break_block_item_vars'] = function(block) {
   var dropdown_vars = block.getFieldValue('vars');
   return [dropdown_vars, Blockly.JavaScript.ORDER_ATOMIC];
 };
+
+// SEND CHAT EVENT
+// ----------------
+
+// sent event
+Blockly.JavaScript['chat_message_event'] = function(block) {
+  var statements_item_actions = Blockly.JavaScript.statementToCode(block, 'item_actions');
+  var code = 'function chatHook(message) {\n' + statements_item_actions + '}';
+  return code;
+};
+
+// message variable
+Blockly.JavaScript['chat_message_event_variable'] = function(block) {
+  var code = 'message';
+  return [code, Blockly.JavaScript.ORDER_ATOMIC];
+};
+
+// RECEIVE CHAT EVENT
+// ----------------
+
+// receive event
+Blockly.JavaScript['chat_receive_event'] = function(block) {
+  var statements_item_actions = Blockly.JavaScript.statementToCode(block, 'item_actions');
+  var code = 'function chatReceiveHook(str, sender) {\n' + statements_item_actions + '}';
+  return code;
+};
+
+// message variable
+Blockly.JavaScript['chat_receive_vars'] = function(block) {
+  var dropdown_vars = block.getFieldValue('vars');
+  return [dropdown_vars, Blockly.JavaScript.ORDER_ATOMIC];
+};

@@ -135,7 +135,7 @@ Blockly.Blocks['leave_game_event'] = {
     }
 };
 
-// LEAVE/JOIN EVENT
+// ENTITY SPAWN/REMOVED EVENT
 // ----------------
 
 Blockly.Blocks['entity_spawned_event'] = {
@@ -216,8 +216,6 @@ Blockly.Blocks['break_block_event'] = {
             .appendField("on block break:");
         this.appendStatementInput("item_actions");
         this.setTooltip('Activates when a player breaks a block.');
-        this.contextMenuMsg_ = 'Get variables';
-        this.contextMenuType_ = 'break_block_item_vars';
     }
 };
 
@@ -231,5 +229,53 @@ Blockly.Blocks['break_block_item_vars'] = {
         this.setTooltip('Variables for the break block event.');
 
 
+    }
+};
+
+// CHAT MESSAGE EVENT
+// ----------------
+
+Blockly.Blocks['chat_message_event'] = {
+    init: function () {
+        this.setColour(0);
+        this.appendDummyInput()
+            .appendField("on chat message sent:");
+        this.appendStatementInput("item_actions");
+        this.setTooltip('Happens whenever a a message is sent in chat from the player');
+    }
+};
+
+// message variable
+Blockly.Blocks['chat_message_event_variable'] = {
+    init: function () {
+        this.appendDummyInput()
+            .appendField("message");
+        this.setColour(0);
+        this.setOutput(true, "String");
+        this.setTooltip('Returns the message sent');
+    }
+};
+
+// CHAT RECIEVE EVENT
+// ----------------
+
+Blockly.Blocks['chat_receive_event'] = {
+    init: function () {
+        this.setColour(0);
+        this.appendDummyInput()
+            .appendField("on chat message recieve:");
+        this.appendStatementInput("item_actions");
+        this.setTooltip('Happens whenever a a message is recieved in the chat');
+    }
+};
+
+// variables
+Blockly.Blocks['chat_receive_vars'] = {
+    init: function () {
+        this.setColour(0);
+        this.appendDummyInput()
+            .appendField(new Blockly.FieldDropdown([["message", "str"], ["sender", "sender"]]), "vars");
+        this.setOutput(true);
+        this.setTooltip('Variables for a recieved chat message');
     }
 };

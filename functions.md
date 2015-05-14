@@ -1,3 +1,5 @@
+# Functions
+
 - [x] addItemInventory(par1int, par2int, par3int);
 - [x] bl_setMobSkin(par1int, par2String);- [x] 
 - [x] bl_spawnMob(par1double, par2double, par3double, par4int, par5String);
@@ -178,3 +180,17 @@
 - [x] Server.getPort();
 - [x] Server.joinServer(par1String, par2int);
 - [x] Server.sendChat(par1String);
+
+# Hooks
+- [x] function attackHook(attacker, victim) { }
+- [ ] function blockEventHook(x, y, z, type, data) { }
+- [x] function chatHook(text) { }
+- [x] function chatReceiveHook(str, sender) { }
+- [x] function deathHook(attacker, victim) { }
+- [x] function destroyBlock(x, y, z, side) { }
+- [x] function entityAddedHook(entity) { }
+- [x] function entityRemovedHook(entity) { }
+- [x] function leaveGame() { }
+- [ ] function levelEventHook(player, eventType, x, y, z, data) { }
+- [x] function modTick() { }
+- [x] function newLevel(hasLevel) { } **hasLevel currently ignored because I don't know what it is

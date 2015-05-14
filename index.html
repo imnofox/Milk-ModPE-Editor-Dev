@@ -10,20 +10,24 @@
         body {
             height: 100%;
         }
+        
         body {
             background-color: #fff;
             font-family: sans-serif;
             margin-top: 0;
             margin-bottom: 0;
         }
+        
         h1 {
             font-weight: normal;
             font-size: 140%;
         }
+        
         img {
             float: left;
             height: 50px;
         }
+        
         iframe {
             width: 100%;
             height: 100%;
@@ -31,6 +35,7 @@
             border-color: #ddd;
             border-width: 0 1px 1px 0;
         }
+        
         a.button {
             -webkit-border-radius: 5;
             -moz-border-radius: 5;
@@ -40,60 +45,74 @@
             padding: 10px 20px 10px 20px;
             text-decoration: none;
         }
+        
         a.button:hover {
             background: #3cb0fd;
             text-decoration: none;
         }
+        
         td.right {
             text-align: right;
         }
+        
         div.right {
             float: right;
             width: 33%;
             margin-left: 8px;
         }
+        
         div.centre {
             float: left;
             width: 30%;
             padding-left: 10px;
         }
+        
         div.left {
             float: left;
             width: 35%;
             height: 100%;
         }
+        
         #download_buttons {
             float: right;
         }
+        
         .blocklySvg {
             height: 100%;
             width: 100%;
         }
+        
         #textareas {
             width: 100%;
             height: 19%;
             min-height: 90px;
         }
+        
         #code {
             width: 100%;
             height: 100%;
         }
+        
         #xml {
             width: 100%;
             height: 30%;
             float: left;
         }
+        
         #project_input {
             width: 100%;
             height: 30%;
             float: left;
         }
+        
         #unit {
             height: 75%;
         }
+        
         .right tr {
             height: 40px;
         }
+        
         #crafting-grid td {
             width: 32px;
             height: 32px;
@@ -104,21 +123,26 @@
             text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000, 1px 1px 4px rgba(0, 0, 0, 1);
             overflow: hidden;
         }
+        
         #crafting-grid td[class*='items-'] {
             background-color: orangered;
         }
+        
         #crafting-grid td#grid-text {
             text-align: left;
             text-shadow: 1px 1px 4px rgba(0, 0, 0, 1);
             color: #000;
             overflow: hidden;
         }
+        
         #crafting-grid td#grid-text:hover {
             text-align: right;
         }
+        
         #crafting-grid table {
             table-layout: fixed;
         }
+        
         #crafting-grid-box {
             position: fixed;
             z-index: 1;
@@ -133,6 +157,7 @@
             opacity: .7;
             transition: .2s;
         }
+        
         #crafting-grid-box:hover {
             opacity: 1;
         }
@@ -180,7 +205,6 @@
     <script src="msg/messages.js"></script>
 
     <script>
-
         function init() {
             Blockly.inject(document.getElementById('unit'), {
                 toolbox: document.getElementById('toolbox'),
@@ -283,7 +307,6 @@
                 document.getElementById("xml_boxes").style.visibility = 'visible';
             }
         }
-        
     </script>
 
     <link href="genericons.css" type="text/css" rel="stylesheet" />
@@ -397,6 +420,14 @@
                             <block type="death_event"></block>
                             <block type="murderer_variable"></block>
                             <block type="victim_variable"></block>
+                        </category>
+                        <category name="Send message">
+                            <block type="chat_message_event"></block>
+                            <block type="chat_message_event_variable"></block>
+                        </category>
+                        <category name="Receive message">
+                            <block type="chat_receive_event"></block>
+                            <block type="chat_receive_vars"></block>
                         </category>
                     </category>
                     <category name="Text">
