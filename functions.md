@@ -115,7 +115,7 @@
 - [ ] Player.isFlying();
 - [ ] Player.isPlayer(par1int);
 - [ ] Player.setArmorSlot(par1int, par2int, par3int);
-- [ ] ~~Player.setCanFly(par1boolean);~~
+- [ ] ~~Player.setCanFly(par1boolean);~~ **These won't be added because cheating on servers is gross**
 - [ ] ~~Player.setFlying(par1boolean);~~
 - [x] Player.setHealth(par1int);
 - [ ] Entity.getAll();
@@ -173,8 +173,8 @@
 - [x] Block.setRenderType(par1int, par2int);
 - [x] Block.setShape(par1int, par2double, par3double, par4double, par5double, par6double, par7double);
 - [x] Server.getAddress();
-- [ ] Server.getAllPlayerNames();  #seems to be broken, so haven't added.
-- [ ] Server.getAllPlayers();      #didn't bother because ^
+- [ ] Server.getAllPlayerNames(); **seems to be broken, so haven't added.**
+- [ ] Server.getAllPlayers(); **didn't bother because ^**
 - [x] Server.getPort();
 - [x] Server.joinServer(par1String, par2int);
 - [x] Server.sendChat(par1String);
