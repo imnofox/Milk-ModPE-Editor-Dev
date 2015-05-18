@@ -81,6 +81,27 @@ Blockly.Blocks['get_tile'] = {
     }
 };
 
+// get data
+Blockly.Blocks['get_data'] = {
+    init: function () {
+        this.setColour(210);
+        this.appendDummyInput()
+            .appendField("get damage of block at");
+        this.appendValueInput("x")
+            .setCheck("Number")
+            .appendField("x");
+        this.appendValueInput("y")
+            .setCheck("Number")
+            .appendField("y");
+        this.appendValueInput("z")
+            .setCheck("Number")
+            .appendField("z");
+        this.setInputsInline(true);
+        this.setOutput(true, "Number");
+        this.setTooltip('Returns the data of the block at the specified coordinates');
+    }
+};
+
 // set block
 Blockly.Blocks['set_tile'] = {
     init: function () {
