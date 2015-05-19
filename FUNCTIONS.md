@@ -49,7 +49,7 @@
 - [x] ModPE.setItem(par1int, par2String, par3int, par4String, par5int);
 - [ ] ModPE.setItems(par1String);
 - [ ] ModPE.setTerrain(par1String);
-- [ ] ModPE.showTipMessage(par1String);
+- [x] ModPE.showTipMessage(par1String);
 - [x] ModPE.takeScreenshot(par1String);
 - [ ] Level.addParticle(par1int, par2double, par3double, par4double, par5double, par6double, par7double, par8int);
 - [ ] Level.biomeIdToName(par1int);

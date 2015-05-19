@@ -575,6 +575,20 @@ Blockly.Blocks['client_message'] = {
     }
 };
 
+// tip message function
+Blockly.Blocks['tip_message'] = {
+    init: function () {
+        this.setColour(Blockly.Blocks.texts.HUE);
+        this.appendValueInput("message")
+            .appendField("tip message")
+            .setCheck("String");
+        this.setPreviousStatement(true);
+        this.setNextStatement(true);
+        this.setTooltip('Sets the text of the GUI text');
+    }
+};
+
+
 // credits block - kinda irrelevant
 Blockly.Blocks['credits'] = {
     init: function () {
