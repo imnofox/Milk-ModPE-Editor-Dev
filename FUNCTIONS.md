@@ -193,4 +193,9 @@
 - [x] function leaveGame() { }
 - [ ] function levelEventHook(player, eventType, x, y, z, data) { }
 - [x] function modTick() { }
-- [x] function newLevel(hasLevel) { } **hasLevel currently ignored because I don't know what it is
+- [x] function newLevel(hasLevel) { } **hasLevel currently ignored because I don't know what it is**
+- [x] function procCmd(cmd) { }
+- [ ] function selectLevelHook() { }
+- [ ] function serverMessageReceiveHook(str) { }
+- [ ] function startDestroyBlock(x, y, z, side) { }
+- [ ] function useItem(x, y, z, itemId, blockId, side, itemDamage, blockDamage) { }
